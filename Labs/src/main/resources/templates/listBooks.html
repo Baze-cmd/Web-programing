@@ -1,0 +1,44 @@
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Books Homepage - Welcome to My Book Store</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to My Book Store</h1>
+</header>
+<main>
+    <form method="post" action="/listBooks">
+        <label>
+            <h3>Enter book name to search</h3>
+            <input type="text" value="" name="bookToSearch">
+        </label>
+        <input type='submit' value='searchBook'>
+    </form>
+    <form method="post" action="/author">
+        <h2>Choose book:</h2>
+        <!-- Display radio buttons for each book,
+                the value should be the isbn
+                and the displayed text should be Title: <bookTitle>, Genre:<genre>, Year: <year> -->
+        <ul>
+            <li  th:each= "book : ${books}">
+                <p th:text="|Title: ${book.getTitle()}  Genre: ${book.getGenre()}  Year: ${book.getYear()}|">
+                    Title
+                </p>
+                <input type="radio" name="book" th:id="${book.getTitle()}" th:value="${book.getIsbn()}">
+            </li>
+        </ul>
+
+        <input type='submit' value='Submit'>
+    </form>
+</main>
+</body>
+</html>
