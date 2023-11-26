@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+</head>
+<body>
+<form method="post" action="/books/addNewBook">
+    Book Isbn:<input type="text" name="isbn"><br>
+    Book Title:<input type="text" name="Title"><br>
+    Book Genre:<input type="text" name="genre"><br>
+    Book year<input type="number" name="year"><br>
+    Store ID:
+    <select name="store">
+        <option th:each="bookStore : ${bookStores}" th:value="${bookStore.getId()}"
+                th:text="${bookStore.getId()}"></option>
+    </select><br>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Book</title>
+</head>
+<body>
+<form method="post" action="/books/editBook">
+    <input type="hidden" name="id" th:value="${book.getId()}"/>
+    Title:
+    <input type="text" name="editTitle" th:placeholder="${book.getTitle()}"/><br>
+    Isbn:
+    <input type="text" name="editIsbn" th:placeholder="${book.getIsbn()}"><br>
+    Genre:
+    <input type="text" name="editGenre" th:placeholder="${book.getGenre()}"/><br>
+    Year:
+    <input type="number" name="editYear" th:placeholder="${book.getYear()}"/><br>
+    Store ID:
+    <select name="editStore">
+        <option th:each="bookStore : ${stores}" th:value="${bookStore.getId()}"
+                th:text="${bookStore.getId()}"></option>
+    </select><br>
+    <input type="submit" value="Edit book">
+</form>
+
+</body>
+</html>

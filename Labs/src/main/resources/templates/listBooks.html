@@ -1,4 +1,3 @@
-
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -16,12 +15,15 @@
     <h1>Welcome to My Book Store</h1>
 </header>
 <main>
-    <form method="post" action="/listBooks">
+    <form method="post" action="/books">
         <label>
             <h3>Enter book name to search</h3>
             <input type="text" value="" name="bookToSearch">
         </label>
         <input type='submit' value='searchBook'>
+    </form>
+    <form method="get" action="/books/add">
+        <input type="submit" value="Add new book">
     </form>
     <form method="post" action="/author">
         <h2>Choose book:</h2>
@@ -29,11 +31,13 @@
                 the value should be the isbn
                 and the displayed text should be Title: <bookTitle>, Genre:<genre>, Year: <year> -->
         <ul>
-            <li  th:each= "book : ${books}">
-                <p th:text="|Title: ${book.getTitle()}  Genre: ${book.getGenre()}  Year: ${book.getYear()}|">
+            <li th:each="book : ${books}">
+                <p th:text="|Title: ${book.getTitle()}  Genre: ${book.getGenre()}  Year: ${book.getYear()} BookStore: ${book.getBookStore().getName()}|">
                     Title
                 </p>
                 <input type="radio" name="book" th:id="${book.getTitle()}" th:value="${book.getIsbn()}">
+                <button><a th:href="@{'/books/edit/{id}' (id=${book.getId()})}" class="edit">Edit</a></button>
+                <button><a th:href="@{'/books/delete/{id}' (id=${book.getId()})}" class="edit">Delete</a></button>
             </li>
         </ul>
 
