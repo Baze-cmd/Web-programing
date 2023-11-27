@@ -34,7 +34,8 @@
 </header>
 <section>
 
-    <form method="post" action="/book">
+    <form method="get" action="/book">
+        <input type="hidden" name="bookIsbn" th:icon="${bookIsbn}" th:value="${bookIsbn}">
         <h2>Select author:</h2>
         <!-- Make changes to this code to dynamically display radio buttons for each author as in the example -->
         <ul>
@@ -42,7 +43,7 @@
                 <p th:text="|Name: ${author.getName()}  Surname: ${author.getSurname()}  Biography: ${author.getBiography()}|">
                 </p>
                 <input type="radio" name="author" th:id="${author.getId()}" th:value="${author.getId()}">
-                <input type="hidden" name="bookIsbn" th:icon="${bookIsbn}" th:value="${bookIsbn}">
+
             </li>
         </ul>
         <br/>

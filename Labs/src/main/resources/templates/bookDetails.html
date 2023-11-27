@@ -25,6 +25,11 @@
         <li th:each="author : ${book.getAuthors()}">
             <p th:text="|Name: ${author.getName()}  Surname: ${author.getSurname()}  Biography: ${author.getBiography()}|">
             </p>
+            <form method="post" action="/book/copyAuthor">
+                <input type="hidden" name="bookIsbn" th:value="${book.getIsbn()}">
+                <input type="hidden" name="authorID" th:value="${author.getId()}">
+                <input type="submit" value="Copy Authors">
+            </form>
         </li>
     </ul>
 
