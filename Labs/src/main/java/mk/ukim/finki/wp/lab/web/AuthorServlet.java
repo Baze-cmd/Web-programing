@@ -13,13 +13,13 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 
-@WebServlet(name = "AuthorServlet", urlPatterns = "/author")
-public class АuthorServlet extends HttpServlet
+@WebServlet(name = "AuthorServlet", urlPatterns = "/servlet/author")
+public class AuthorServlet extends HttpServlet
 {
     private final SpringTemplateEngine springTemplateEngine;
     private final AuthorService authorService;
 
-    public АuthorServlet(SpringTemplateEngine springTemplateEngine, AuthorService authorService)
+    public AuthorServlet(SpringTemplateEngine springTemplateEngine, AuthorService authorService)
     {
         this.springTemplateEngine = springTemplateEngine;
         this.authorService = authorService;

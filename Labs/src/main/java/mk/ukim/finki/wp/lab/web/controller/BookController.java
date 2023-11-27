@@ -1,15 +1,11 @@
 package mk.ukim.finki.wp.lab.web.controller;
-
-import mk.ukim.finki.wp.lab.model.Author;
 import mk.ukim.finki.wp.lab.model.Book;
-import mk.ukim.finki.wp.lab.model.BookStore;
 import mk.ukim.finki.wp.lab.service.BookService;
 import mk.ukim.finki.wp.lab.service.BookStoreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -38,14 +34,12 @@ public class BookController
     }
 
     @PostMapping
-    public String searchResults(@RequestParam(name = "bookToSearch") String bookToSearch, Model model)
+    public String searchResults(@RequestParam(name = "bookToSearch") String title, Model model)
     {
-        if (bookToSearch == null) return "redirect:/books";
-        List<Book> booksToList = new ArrayList<>();
-        List<Book> allBooks = this.bookService.listBooks();
-        for (Book b : allBooks)
-            if (b.getTitle().toLowerCase().contains(bookToSearch.toLowerCase())) booksToList.add(b);
-        model.addAttribute("books", booksToList);
+        if (title == null)
+            return "redirect:/books";
+        List<Book> resultBooks = this.bookService.findBooksByTitle(title);
+        model.addAttribute("books", resultBooks);
         return "listBooks";
     }
 
@@ -57,79 +51,30 @@ public class BookController
                                      @RequestParam(name = "editYear") String year,
                                      @RequestParam(name = "editStore") String storeID)
     {
-        if (title.equals("") || isbn.equals("") || genre.equals("") || year.equals(""))
-            return "redirect:/books";
-        int y = Integer.parseInt(year);
-        int ID = Integer.parseInt(id);
-        List<Book> books = this.bookService.listBooks();
-        int index = -1;
-        for (int i = 0; i < books.size(); i++)
-        {
-            if (books.get(i).getId() == ID)
-            {
-                index = i;
-                break;
-            }
-        }
-        List<BookStore> stores = this.bookStoreService.findAll();
-        BookStore store = null;
-        for (BookStore bs : stores)
-        {
-            if (bs.getId() == Long.parseLong(storeID))
-            {
-                store = bs;
-                break;
-            }
-        }
-        BookStore bs = null;
-        this.bookService.listBooks().get(index).setTitle(title);
-        this.bookService.listBooks().get(index).setIsbn(isbn);
-        this.bookService.listBooks().get(index).setGenre(genre);
-        this.bookService.listBooks().get(index).setYear(y);
-        this.bookService.listBooks().get(index).setBookStore(store);
-        return "redirect:/books";
+        return this.bookService.editBook(id,title,isbn,genre,year,storeID);
     }
 
-    @GetMapping("/edit/{id}")
-    public String editBookPage(@PathVariable Long id, Model model)
+    @GetMapping("/edit-form/{id}")
+    public String getEditBookForm(@PathVariable Long id, Model model)
     {
-        List<Book> books = this.bookService.listBooks();
-        Book bookToEdit = null;
-        for (Book b : books)
-        {
-            if (b.getId().equals(id))
-            {
-                bookToEdit = b;
-                break;
-            }
-        }
-        if (bookToEdit == null) return "redirect:/books?error=book Not Found";
 
-        // Add the bookToEdit to the model to populate the edit form
+        Book bookToEdit = this.bookService.findBookByID(id);
+        if (bookToEdit == null)
+            return "redirect:/books?error=book Not Found";
         model.addAttribute("book", bookToEdit);
         model.addAttribute("stores", this.bookStoreService.findAll());
-        return "editBook"; // Return the name of the edit book view (HTML template)
+        return "edit-book";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteBook(@PathVariable Long id, Model model)
+    public String deleteBook(@PathVariable Long id)
     {
-        List<Book> books = this.bookService.listBooks();
-        Book bookToDelete = null;
-        for (Book b : books)
-        {
-            if (b.getId().equals(id))
-            {
-                bookToDelete = b;
-                break;
-            }
-        }
-        this.bookService.listBooks().remove(bookToDelete);
+        this.bookService.deleteBookByID(id);
         return "redirect:/books";
     }
 
-    @GetMapping("/add")
-    public String addNewBookPage(Model model)
+    @GetMapping("/add-form")
+    public String getAddBookPage(Model model)
     {
         model.addAttribute("bookStores", this.bookStoreService.findAll());
         return "add-book";
@@ -142,23 +87,7 @@ public class BookController
                            @RequestParam(name = "year") String year,
                            @RequestParam(name = "store") String idStore)
     {
-        if (title.equals("") || isbn.equals("") || genre.equals("") || year.equals(""))
-            return "redirect:/books";
-        Book newBook = new Book(isbn, title, genre, Integer.parseInt(year), new ArrayList<Author>());
-        List<BookStore> stores = this.bookStoreService.findAll();
-        BookStore store = null;
-        for (BookStore bs : stores)
-        {
-            if (bs.getId().equals(Long.parseLong(idStore)))
-            {
-                store = bs;
-                break;
-            }
-        }
-        if (store == null)
-            return "redirect:/books";
-        newBook.setBookStore(store);
-        this.bookService.listBooks().add(newBook);
+        this.bookService.addNewBook(isbn,title,genre,year,idStore);
         return "redirect:/books";
     }
 }
