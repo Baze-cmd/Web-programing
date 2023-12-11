@@ -53,6 +53,11 @@ public class BookService implements BookServiceInterface, AuthorServiceInterface
             System.out.printf("No book with isbn: %s\n", isbn);
             return null;
         }
+        if(book.getAuthors().contains(author))
+        {
+            System.out.printf("Author with id %d is already an author to the book (ISBN: %s)\n", authorId, isbn);
+            return author;
+        }
         book.getAuthors().add(author);
         this.bookRepository.save(book);
         return author;

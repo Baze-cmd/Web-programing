@@ -6,6 +6,7 @@ import mk.ukim.finki.wp.lab.service.ReviewServiceInterface;
 import mk.ukim.finki.wp.lab.service.impl.BookService;
 import mk.ukim.finki.wp.lab.service.impl.BookStoreService;
 import mk.ukim.finki.wp.lab.service.impl.ReviewService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -107,9 +108,26 @@ public class BooksController
         if (book == null)
             return "redirect:/books/reviews/" + id;
         Review review = new Review(Integer.parseInt(score), description, book, LocalDateTime.now());
-        reviewService.saveReview(review);
+        this.reviewService.saveReview(review);
 
         return "redirect:/books/reviews/" + id;
+    }
+
+    @PostMapping("/reviews/filterFromTo")
+    public String filterReviews(
+            @RequestParam(name = "bookID") String id,
+            @RequestParam(name = "from") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime from,
+            @RequestParam(name = "to") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime to,
+            Model model)
+    {
+        Book book = this.bookService.findBookByID(Long.parseLong(id));
+        List<Review> reviews = this.reviewService.getReviewsWithinTimeIntervalForBook(Long.parseLong(id), from, to);
+        double averageRating = reviews.stream().mapToDouble(Review::getScore).sum();
+        model.addAttribute("book", book);
+        model.addAttribute("averageRating",
+                String.format("%.2f", averageRating / reviews.size()));
+        model.addAttribute("reviews", reviews);
+        return "book-reviews";
     }
 
     @GetMapping("/add-form")

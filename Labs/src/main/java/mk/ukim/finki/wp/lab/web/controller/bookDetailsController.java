@@ -5,7 +5,6 @@ import mk.ukim.finki.wp.lab.service.impl.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,7 +23,6 @@ public class bookDetailsController
     public String getBookDetailsPage(@RequestParam(name = "author") String authorID,
                                      @RequestParam(name = "bookIsbn") String bookIsbn, Model model)
     {
-
         if (authorID == null)
             return "noAuthorSelected";
         Long authorId = Long.parseLong(authorID);
@@ -35,12 +33,5 @@ public class bookDetailsController
             model.addAttribute("alreadyIn", "");
         model.addAttribute("book", this.bookService.findBookByIsbn(bookIsbn));
         return "bookDetails";
-    }
-
-    @PostMapping("/copyAuthor")
-    public String copyAuthors(@RequestParam(name = "bookIsbn") String bookIsbn,
-                              @RequestParam(name = "authorID") String authorID, Model model)
-    {
-        return "redirect:/book?author=" + authorID + "&bookIsbn=" + bookIsbn;
     }
 }

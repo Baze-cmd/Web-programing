@@ -5,6 +5,8 @@ import mk.ukim.finki.wp.lab.repository.jpa.ReviewRepository;
 import mk.ukim.finki.wp.lab.service.ReviewServiceInterface;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +29,18 @@ public class ReviewService implements ReviewServiceInterface
     @Override
     public List<Review> getReviewsForBook(Long id)
     {
-        List<Review> list = this.reviewRepository.findAll().stream()
+        return this.reviewRepository.findAll().stream()
                 .filter(r -> r.getBook().getId().equals(id))
+                .sorted(Comparator.comparing(Review::getTimestamp))
                 .collect(Collectors.toList());
-        return list;
+    }
+
+    @Override
+    public List<Review> getReviewsWithinTimeIntervalForBook(Long id, LocalDateTime from, LocalDateTime to)
+    {
+        return this.reviewRepository.findByTimestampBetween(from,to)
+                .stream().filter(r -> r.getBook().getId().equals(id))
+                .sorted(Comparator.comparing(Review::getTimestamp))
+                .collect(Collectors.toList());
     }
 }

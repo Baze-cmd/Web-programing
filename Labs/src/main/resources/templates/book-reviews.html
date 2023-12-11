@@ -18,12 +18,25 @@
         <label for="score">Score:</label>
         <input type="number" id="score" name="score" required/><br/>
         <label for="description">Description:</label><br/>
-        <textarea cols="40" rows="20" id="description" name="description" required></textarea><br/>
+        <textarea cols="80" rows="20" id="description" name="description" required></textarea><br/>
         <button type="submit">Add Review</button>
     </form>
 </div>
 
 <hr/>
+<div>
+    <form method="POST" action="/books/reviews/filterFromTo">
+        <input type="hidden" name="bookID" th:value="${book.getId()}">
+
+        <label>From:</label>
+        <input type="datetime-local" name="from" required>
+
+        <label>To:</label>
+        <input type="datetime-local" name="to" required>
+
+        <button type="submit">Get reviews in interval</button>
+    </form>
+</div>
 <div>
     <!-- List all the reviews for the book -->
     <h2>Reviews</h2>
