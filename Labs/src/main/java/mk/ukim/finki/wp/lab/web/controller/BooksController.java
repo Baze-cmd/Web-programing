@@ -86,6 +86,22 @@ public class BooksController
         return "redirect:/books";
     }
 
+    //filter po keyword kaj reviews
+    @PostMapping("/filterByKeyword")
+    public String filterByKeywordForBook(@RequestParam(name = "bookID") String id,
+                                         @RequestParam(name = "keyword") String keyword,
+                                         Model model)
+    {
+        Book book = this.bookService.findBookByID(Long.parseLong(id));
+        List<Review> reviews = this.reviewService.findReviewsForBookWithKeyword(Long.parseLong(id),keyword);
+        double averageRating = reviews.stream().mapToDouble(Review::getScore).sum();
+        model.addAttribute("book", book);
+        model.addAttribute("averageRating",
+                String.format("%.2f", averageRating / reviews.size()));
+        model.addAttribute("reviews", reviews);
+        return "book-reviews";
+    }
+
     @GetMapping("/reviews/{id}")
     public String getReviewPage(@PathVariable Long id, Model model)
     {

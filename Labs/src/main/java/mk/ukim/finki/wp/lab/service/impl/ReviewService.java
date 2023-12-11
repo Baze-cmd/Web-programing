@@ -6,6 +6,7 @@ import mk.ukim.finki.wp.lab.service.ReviewServiceInterface;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,9 +39,32 @@ public class ReviewService implements ReviewServiceInterface
     @Override
     public List<Review> getReviewsWithinTimeIntervalForBook(Long id, LocalDateTime from, LocalDateTime to)
     {
-        return this.reviewRepository.findByTimestampBetween(from,to)
+        return this.reviewRepository.findByTimestampBetween(from, to)
                 .stream().filter(r -> r.getBook().getId().equals(id))
                 .sorted(Comparator.comparing(Review::getTimestamp))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Review> findReviewsForBookWithKeyword(Long id, String keyword)
+    {
+        List<Review> allReviews = this.reviewRepository.findAll().stream()
+                .filter(r -> r.getBook().getId().equals(id))
+                .sorted(Comparator.comparing(Review::getTimestamp))
+                .collect(Collectors.toList());
+        List<Review> haveKeyword = new ArrayList<>();
+        for(Review r : allReviews)
+        {
+            String[] parts = r.getDescription().split("\s+");
+            for(String word : parts)
+            {
+                if(word.toLowerCase().contains(keyword.toLowerCase()))
+                {
+                    haveKeyword.add(r);
+                    break;
+                }
+            }
+        }
+        return haveKeyword;
     }
 }

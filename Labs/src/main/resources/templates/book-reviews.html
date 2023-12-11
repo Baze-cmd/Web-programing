@@ -38,6 +38,16 @@
     </form>
 </div>
 <div>
+    <form method="post" action="/books/filterByKeyword">
+        <input type="hidden" name="bookID" th:value="${book.getId()}">
+        <label>
+            <h3>Search reviews by keyword</h3>
+            <input type="text" name="keyword">
+        </label>
+        <input type='submit' value='Search'>
+    </form>
+</div>
+<div>
     <!-- List all the reviews for the book -->
     <h2>Reviews</h2>
     <ul>

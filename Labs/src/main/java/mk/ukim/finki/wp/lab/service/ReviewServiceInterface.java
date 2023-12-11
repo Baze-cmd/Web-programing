@@ -13,4 +13,5 @@ public interface ReviewServiceInterface
     List<Review> getReviewsForBook(Long id);
 
     List<Review> getReviewsWithinTimeIntervalForBook(Long id,LocalDateTime from, LocalDateTime to);
+    List<Review> findReviewsForBookWithKeyword(Long id, String keyword);
 }
