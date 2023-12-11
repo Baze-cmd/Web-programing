@@ -1,6 +1,6 @@
 package mk.ukim.finki.wp.lab.web.controller;
 
-import mk.ukim.finki.wp.lab.service.AuthorService;
+import mk.ukim.finki.wp.lab.service.impl.AuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;

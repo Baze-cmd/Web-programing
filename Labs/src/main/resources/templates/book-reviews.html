@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+</head>
+<body>
+<div>
+    <!-- Display Book Details -->
+    <h1 th:text="${book.getTitle()}"></h1>
+    <div>
+        <strong>Average Rating:</strong>
+        <span th:text="${averageRating}"></span>
+    </div>
+    <!-- Add a form to add a review for the book -->
+    <form method="post" action="/books/reviews/addReview">
+        <input type="hidden" name="bookId" th:value="${book.getId()}"/>
+        <label for="score">Score:</label>
+        <input type="number" id="score" name="score" required/><br/>
+        <label for="description">Description:</label><br/>
+        <textarea cols="40" rows="20" id="description" name="description" required></textarea><br/>
+        <button type="submit">Add Review</button>
+    </form>
+</div>
+
+<hr/>
+<div>
+    <!-- List all the reviews for the book -->
+    <h2>Reviews</h2>
+    <ul>
+        <li th:each="review : ${reviews}">
+            <!-- Display timestamp, score, and description -->
+            <div th:text="${#temporals.format(review.getTimestamp(), 'dd-MM-yyyy HH:mm:ss')}"></div>
+            <div><strong>Score:</strong> <span th:text="${review.getScore()}"></span></div>
+            <div><strong>Description:</strong> <span th:text="${review.getDescription()}"></span></div>
+            <hr/> <!-- Add a horizontal line between reviews for better separation -->
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

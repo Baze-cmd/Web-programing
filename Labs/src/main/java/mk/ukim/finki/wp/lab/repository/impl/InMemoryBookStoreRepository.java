@@ -1,4 +1,4 @@
-package mk.ukim.finki.wp.lab.repository;
+package mk.ukim.finki.wp.lab.repository.impl;
 
 import mk.ukim.finki.wp.lab.model.BookStore;
 import org.springframework.stereotype.Repository;
@@ -9,11 +9,11 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 @Repository
-public class BookStoreRepository
+public class InMemoryBookStoreRepository
 {
     private final List<BookStore> bookStores;
 
-    public BookStoreRepository()
+    public InMemoryBookStoreRepository()
     {
         bookStores = new ArrayList<BookStore>();
         Random random = new Random();

@@ -1,11 +1,16 @@
 package mk.ukim.finki.wp.lab.web.controller;
+
 import mk.ukim.finki.wp.lab.model.Book;
-import mk.ukim.finki.wp.lab.service.BookService;
-import mk.ukim.finki.wp.lab.service.BookStoreService;
+import mk.ukim.finki.wp.lab.model.Review;
+import mk.ukim.finki.wp.lab.service.ReviewServiceInterface;
+import mk.ukim.finki.wp.lab.service.impl.BookService;
+import mk.ukim.finki.wp.lab.service.impl.BookStoreService;
+import mk.ukim.finki.wp.lab.service.impl.ReviewService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -14,11 +19,15 @@ public class BooksController
 {
     private final BookService bookService;
     private final BookStoreService bookStoreService;
+    private final ReviewService reviewService;
 
-    public BooksController(BookService bookService, BookStoreService bookStoreService)
+    public BooksController(BookService bookService,
+                           BookStoreService bookStoreService,
+                           ReviewService reviewService)
     {
         this.bookService = bookService;
         this.bookStoreService = bookStoreService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping
@@ -51,7 +60,10 @@ public class BooksController
                                      @RequestParam(name = "editYear") String year,
                                      @RequestParam(name = "editStore") String storeID)
     {
-        return this.bookService.editBook(id,title,isbn,genre,year,storeID);
+        if (title.equals("") || isbn.equals("") || genre.equals("") || year.equals(""))
+            return "redirect:/books";
+        this.bookService.editBook(id, title, isbn, genre, year, storeID);
+        return "redirect:/books";
     }
 
     @GetMapping("/edit-form/{id}")
@@ -73,6 +85,33 @@ public class BooksController
         return "redirect:/books";
     }
 
+    @GetMapping("/reviews/{id}")
+    public String getReviewPage(@PathVariable Long id, Model model)
+    {
+        Book book = this.bookService.findBookByID(id);
+        List<Review> reviews = this.reviewService.getReviewsForBook(id);
+        double averageRating = reviews.stream().mapToDouble(Review::getScore).sum();
+        model.addAttribute("book", book);
+        model.addAttribute("averageRating",
+                String.format("%.2f", averageRating / reviews.size()));
+        model.addAttribute("reviews", reviews);
+        return "book-reviews";
+    }
+
+    @PostMapping("/reviews/addReview")
+    public String addReviewToBook(@RequestParam(name = "bookId") String id,
+                                  @RequestParam(name = "score") String score,
+                                  @RequestParam(name = "description") String description)
+    {
+        Book book = this.bookService.findBookByID(Long.parseLong(id));
+        if (book == null)
+            return "redirect:/books/reviews/" + id;
+        Review review = new Review(Integer.parseInt(score), description, book, LocalDateTime.now());
+        reviewService.saveReview(review);
+
+        return "redirect:/books/reviews/" + id;
+    }
+
     @GetMapping("/add-form")
     public String getAddBookPage(Model model)
     {
@@ -87,7 +126,7 @@ public class BooksController
                            @RequestParam(name = "year") String year,
                            @RequestParam(name = "store") String idStore)
     {
-        this.bookService.addNewBook(isbn,title,genre,year,idStore);
+        this.bookService.addNewBook(isbn, title, genre, year, idStore);
         return "redirect:/books";
     }
 }

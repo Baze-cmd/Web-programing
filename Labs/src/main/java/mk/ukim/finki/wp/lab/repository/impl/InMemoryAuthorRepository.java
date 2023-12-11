@@ -1,4 +1,4 @@
-package mk.ukim.finki.wp.lab.repository;
+package mk.ukim.finki.wp.lab.repository.impl;
 
 import mk.ukim.finki.wp.lab.model.Author;
 import org.springframework.stereotype.Repository;
@@ -9,18 +9,20 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Repository
-public class AuthorRepository
+public class InMemoryAuthorRepository
 {
     private final List<Author> authors;
 
-    public AuthorRepository()
+    public InMemoryAuthorRepository()
     {
         this.authors = new ArrayList<>();
         IntStream.range(1, 6).forEach(i ->
         {
             this.authors.add
                     (
-                            new Author((long)(Math.random()*100), String.format("author%d", i), String.format("authorSurname%d", i),
+                            new Author((long)(Math.random()*100),
+                                    String.format("author%d", i),
+                                    String.format("authorSurname%d", i),
                                     String.format("biography%d", i))
                     );
         });

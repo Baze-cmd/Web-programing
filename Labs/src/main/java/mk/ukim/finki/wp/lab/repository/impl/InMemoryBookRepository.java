@@ -1,4 +1,4 @@
-package mk.ukim.finki.wp.lab.repository;
+package mk.ukim.finki.wp.lab.repository.impl;
 
 import mk.ukim.finki.wp.lab.model.Author;
 import mk.ukim.finki.wp.lab.model.Book;
@@ -9,19 +9,19 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @Repository
-public class BookRepository
+public class InMemoryBookRepository
 {
     private final List<Book> books;
 
-    public BookRepository()
+    public InMemoryBookRepository()
     {
         this.books = new ArrayList<Book>();
         IntStream.range(1, 6).forEach
                 (
                         i ->
                         {
-
-                            Author a = new Author((long)i, String.format("author%d", (int) (Math.random() * 100)),
+                            Author a = new Author((long)i,
+                                    String.format("author%d", (int) (Math.random() * 100)),
                                     String.format("authorSurname%d", (int) (Math.random() * 100)),
                                     String.format("biography%d", (int) (Math.random() * 100)));
                             List<Author> aList = new ArrayList<Author>();
@@ -43,7 +43,6 @@ public class BookRepository
 
     public Book findByIsbn(String isbn)
     {
-
         return this.books.stream().filter(book -> book.getIsbn().equals(isbn)).findFirst().orElse(null);
     }
 

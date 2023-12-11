@@ -53,6 +53,7 @@
                 <input type="radio" name="book" th:id="${book.getTitle()}" th:value="${book.getIsbn()}">
                 <button><a th:href="@{'/books/edit-form/{id}' (id=${book.getId()})}" class="edit">Edit</a></button>
                 <button><a th:href="@{'/books/delete/{id}' (id=${book.getId()})}" class="edit">Delete</a></button>
+                <button><a th:href="@{'/books/reviews/{id}' (id=${book.getId()})}" class="edit">Reviews</a></button>
             </li>
         </ul>
 

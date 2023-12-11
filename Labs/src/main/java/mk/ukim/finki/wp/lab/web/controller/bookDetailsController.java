@@ -1,7 +1,7 @@
 package mk.ukim.finki.wp.lab.web.controller;
 
 import mk.ukim.finki.wp.lab.model.Author;
-import mk.ukim.finki.wp.lab.service.BookService;
+import mk.ukim.finki.wp.lab.service.impl.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +24,7 @@ public class bookDetailsController
     public String getBookDetailsPage(@RequestParam(name = "author") String authorID,
                                      @RequestParam(name = "bookIsbn") String bookIsbn, Model model)
     {
+
         if (authorID == null)
             return "noAuthorSelected";
         Long authorId = Long.parseLong(authorID);

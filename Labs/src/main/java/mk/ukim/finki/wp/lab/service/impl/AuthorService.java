@@ -1,7 +1,8 @@
-package mk.ukim.finki.wp.lab.service;
+package mk.ukim.finki.wp.lab.service.impl;
 
 import mk.ukim.finki.wp.lab.model.Author;
-import mk.ukim.finki.wp.lab.repository.AuthorRepository;
+import mk.ukim.finki.wp.lab.repository.jpa.AuthorRepository;
+import mk.ukim.finki.wp.lab.service.AuthorServiceInterface;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

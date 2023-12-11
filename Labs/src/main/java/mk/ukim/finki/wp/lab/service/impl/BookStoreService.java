@@ -1,7 +1,8 @@
-package mk.ukim.finki.wp.lab.service;
+package mk.ukim.finki.wp.lab.service.impl;
 
 import mk.ukim.finki.wp.lab.model.BookStore;
-import mk.ukim.finki.wp.lab.repository.BookStoreRepository;
+import mk.ukim.finki.wp.lab.repository.jpa.BookStoreRepository;
+import mk.ukim.finki.wp.lab.service.BookStoreServiceInterface;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
